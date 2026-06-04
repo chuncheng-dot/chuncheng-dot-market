@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>北国风光 · 黑龙江农特文旅</title>
+<style>
+/* ============================================================
+   CSS Custom Properties
+   ============================================================ */
+:root {
+  --bg: #f7f4f0;
+  --glass: rgba(255,255,255,0.55);
+  --glass-strong: rgba(255,255,255,0.78);
+  --border: rgba(255,255,255,0.6);
+  --border-subtle: rgba(0,0,0,0.06);
+  --text: #1a1a1a;
+  --text-mid: #5a5a5a;
+  --text-soft: #8a8a8a;
+  --ice: #7ba3b8;
+  --ice-dark: #3d6578;
+  --ice-glass: rgba(123,163,184,0.12);
+  --gold: #c8873a;
+  --gold-glass: rgba(200,135,58,0.12);
+  --red: #b8453a;
+  --red-glass: rgba(184,69,58,0.10);
+  --green: #4a7c59;
+  --green-glass: rgba(74,124,89,0.10);
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-float: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
+  --radius: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  --font-serif: 'Noto Serif SC', 'STSong', 'Songti SC', 'PingFang SC', serif;
+  --font-sans: 'PingFang SC', 'SF Pro Display', 'Inter', -apple-system, sans-serif;
+  --safe-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { height: 100%; }
+body {
+  min-height: 100%; min-height: 100dvh;
+  background: var(--bg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  color: var(--text);
+  overflow-x: hidden;
+  display: flex; justify-content: center;
+}
+
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(123,163,184,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 30%, rgba(200,135,58,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 80%, rgba(74,124,89,0.05) 0%, transparent 60%);
+}
+
+.app {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 480px;
+  min-height: 100vh; min-height: 100dvh;
+  display: flex; flex-direction: column;
+  background: transparent;
+}
+
+/* ============================================================
+   Top Nav — frosted glass
+   ============================================================ */
+.top-nav {
+  position: sticky; top: 0; z-index: 100;
+  padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(247,244,240,0.72);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.4s, background 0.4s;
+}
+.top-nav.scrolled { border-bottom-color: var(--border-subtle); background: rgba(247,244,240,0.88); }
+
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-serif); font-size: 21px; font-weight: 700;
+  letter-spacing: 1.5px; color: var(--text);
+}
+.nav-brand .brand-mark {
+  width: 36px; height: 36px; border-radius: 11px;
+  background: linear-gradient(145deg, #7ba3b8, #3d6578);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #fff;
+  box-shadow: 0 4px 16px rgba(61,101,120,0.25);
+}
+.nav-actions { display: flex; gap: 8px; }
+
+.nav-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: var(--glass);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 17px;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  color: var(--text-mid);
+}
+.nav-btn:active { transform: scale(0.9); background: rgba(0,0,0,0.06); }
+
+/* ============================================================
+   Page System
+   ============================================================ */
+.page-area {
+  flex: 1; position: relative; overflow: hidden;
+  padding-bottom: calc(80px + var(--safe-bottom) + 16px);
+}
+.page {
+  position: absolute; inset: 0;
+  overflow-y: auto; overflow-x: hidden;
+  opacity: 0; transform: translateY(16px); pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
+  padding: 0 0 24px 0;
+}
+.page.on { opacity: 1; transform: translateY(0); pointer-events: auto; z-index: 1; }
+.page::-webkit-scrollbar { width: 0; }
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero {
+  margin: 8px 16px 20px; border-radius: var(--radius-xl); height: 220px;
+  position: relative; overflow: hidden; isolation: isolate;
+  background: linear-gradient(150deg, #5c8397 0%, #3d6578 35%, #2a4a5a 70%, #1a303e 100%);
+}
+.hero-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0.42; mix-blend-mode: soft-light;
+  filter: saturate(0.7); z-index: 0;
+}
+.hero-glass-layer {
+  position: absolute; z-index: 1; border-radius: 20px;
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+}
+.hero-glass-1 { inset: 50% 55% 10% 10%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); }
+.hero-glass-2 { inset: 15% 10% 55% 45%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+.hero-gradient {
+  position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(165deg, rgba(26,48,62,0.78) 0%, rgba(61,101,120,0.45) 50%, rgba(123,163,184,0.25) 100%);
+}
+.hero-body {
+  position: relative; z-index: 3; padding: 32px 24px;
+  display: flex; flex-direction: column; justify-content: flex-end; height: 100%;
+}
+.hero-chip {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.18); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 24px;
+  padding: 6px 16px; font-size: 11px; font-weight: 700;
+  color: #fff; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px;
+}
+.hero-title {
+  font-family: var(--font-serif); font-size: 27px; font-weight: 700;
+  color: #fff; letter-spacing: 2px; line-height: 1.25;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.18);
+}
+.hero-sub { font-size: 13px; color: rgba(255,255,255,0.78); margin-top: 6px; letter-spacing: 0.5px; font-weight: 500; }
+
+/* ============================================================
+   Search Bar
+   ============================================================ */
+.search-glass {
+  margin: 0 16px 20px; display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; border-radius: var(--radius);
+  background: var(--glass); backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border); box-shadow: var(--shadow-card);
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.search-glass:active { transform: scale(0.985); box-shadow: var(--shadow-float); }
+.search-glass .sg-icon { font-size: 18px; opacity: 0.5; }
+.search-glass .sg-text { flex: 1; font-size: 14px; color: var(--text-soft); font-weight: 500; }
+
+/* ============================================================
+   KPI Tiles
+   ============================================================ */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  padding: 0 16px; margin-bottom: 24px;
+}
+.kpi-tile {
+  background: var(--glass); backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 10px; text-align: center; box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.kpi-tile:active { transform: translateY(-2px); box-shadow: var(--shadow-float); }
+.kpi-num { font-family: var(--font-serif); font-size: 26px; font-weight: 700; color: var(--ice-dark); letter-spacing: 0.5px; }
+.kpi-label { font-size: 11px; color: var(--text-soft); margin-top: 3px; font-weight: 500; }
+
+/* ============================================================
+   Section Header
+   ============================================================ */
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 0 16px; margin-bottom: 14px;
+}
+.section-head h2 { font-family: var(--font-serif); font-size: 19px; font-weight: 700; color: var(--text); letter-spacing: 1px; }
+.section-head .more { font-size: 13px; font-weight: 600; color: var(--ice-dark); cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+.section-head .more:active { opacity: 0.5; }
+
+/* ============================================================
+   Category Chips
+   ============================================================ */
+.cat-strip {
+  display: flex; gap: 10px; overflow-x: auto; padding: 0 16px; margin-bottom: 24px;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.cat-strip::-webkit-scrollbar { display: none; }
+.cat-chip {
+  flex-shrink: 0; padding: 9px 20px; border-radius: 22px;
+  font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--glass); backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  color: var(--text-mid); box-shadow: var(--shadow-card);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1); letter-spacing: 0.3px;
+}
+.cat-chip.on { background: var(--ice-dark); border-color: var(--ice-dark); color: #fff; box-shadow: 0 4px 20px rgba(61,101,120,0.30); transform: scale(1.04); }
+.cat-chip:active { transform: scale(0.94); }
+
+/* ============================================================
+   Product Cards - 2 col
+   ============================================================ */
+.product-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  padding: 0 16px; margin-bottom: 28px;
+}
+.product-card {
+  background: var(--glass); backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden; cursor: pointer; box-shadow: var(--shadow-card);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.product-card:active { transform: scale(0.965); box-shadow: var(--shadow-float); }
+.product-card .img-wrap { position: relative; overflow: hidden; aspect-ratio: 1; }
+.product-card .img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.product-card:active .img-wrap img { transform: scale(1.08); }
+.product-card .img-wrap .badge-glass {
+  position: absolute; top: 10px; left: 10px;
+  background: rgba(0,0,0,0.40); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 14px; letter-spacing: 0.5px;
+}
+.product-card .card-body { padding: 12px 14px 14px; }
+.product-card .card-title { font-size: 14px; font-weight: 700; line-height: 1.35; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 5px; }
+.product-card .card-sub { font-size: 11px; color: var(--text-soft); margin-bottom: 10px; }
+.product-card .card-foot { display: flex; justify-content: space-between; align-items: center; }
+.product-card .price { font-size: 18px; font-weight: 700; color: var(--red); }
+.product-card .price small { font-size: 11px; font-weight: 500; color: var(--text-soft); }
+.product-card .stars { font-size: 11px; color: var(--text-soft); }
+
+/* ============================================================
+   Travel Cards — horizontal scroll
+   ============================================================ */
+.travel-strip {
+  display: flex; gap: 16px; overflow-x: auto; padding: 0 16px 6px;
+  margin-bottom: 28px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.travel-strip::-webkit-scrollbar { display: none; }
+.travel-card {
+  flex-shrink: 0; width: 260px;
+  background: var(--glass); backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden; cursor: pointer; box-shadow: var(--shadow-card);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.travel-card:active { transform: scale(0.965); box-shadow: var(--shadow-float); }
+.travel-card .t-img-wrap { position: relative; height: 160px; overflow: hidden; }
+.travel-card .t-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+.travel-card:active .t-img-wrap img { transform: scale(1.07); }
+.travel-card .t-tag { position: absolute; top: 12px; left: 14px; background: rgba(0,0,0,0.42); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.18); color: #fff; font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 14px; letter-spacing: 1px; }
+.travel-card .t-heart { position: absolute; top: 12px; right: 14px; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.60); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; transition: all 0.25s; color: #888; }
+.travel-card .t-heart.liked { color: #e74c3c; background: rgba(255,240,240,0.75); }
+.travel-card .t-body { padding: 14px 16px 16px; }
+.travel-card .t-title { font-size: 15px; font-weight: 700; line-height: 1.35; color: var(--text); margin-bottom: 6px; }
+.travel-card .t-meta { display: flex; gap: 12px; font-size: 11px; color: var(--text-soft); margin-bottom: 10px; font-weight: 500; }
+.travel-card .t-foot { display: flex; align-items: baseline; justify-content: space-between; }
+.travel-card .t-price { font-size: 18px; font-weight: 700; color: var(--ice-dark); }
+.travel-card .t-price small { font-size: 11px; font-weight: 500; color: var(--text-soft); }
+.travel-card .t-rating { font-size: 12px; color: var(--gold); }
+
+/* ============================================================
+   Feature Cards
+   ============================================================ */
+.feature-list { padding: 0 16px; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
+.feature-card {
+  display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+  border-radius: var(--radius);
+  background: var(--glass); backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--border); cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.feature-card:active { transform: scale(0.98); box-shadow: var(--shadow-float); }
+.feature-card .fc-icon { width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.fc-icon.ice  { background: var(--ice-glass); }
+.fc-icon.gold { background: var(--gold-glass); }
+.fc-icon.red  { background: var(--red-glass); }
+.fc-icon.green{ background: var(--green-glass); }
+.feature-card .fc-text { flex: 1; }
+.feature-card .fc-text h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.feature-card .fc-text p { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+.feature-card .fc-arrow { font-size: 18px; color: var(--text-soft); flex-shrink: 0; }
+
+/* ============================================================
+   Profile Hero
+   ============================================================ */
+.profile-hero {
+  margin: 8px 16px 20px; border-radius: var(--radius-xl); height: 150px;
+  position: relative; overflow: hidden; isolation: isolate;
+  background: linear-gradient(150deg, #4a6e82 0%, #3d6578 35%, #2a4a5a 100%);
+}
+.profile-hero .ph-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(145deg, rgba(26,40,50,0.6), rgba(61,101,120,0.35)); }
+.profile-hero .ph-body { position: relative; z-index: 2; padding: 24px; display: flex; align-items: center; gap: 16px; height: 100%; }
+.profile-hero .ph-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.18); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+.profile-hero .ph-info h3 { font-size: 19px; font-weight: 700; color: #fff; }
+.profile-hero .ph-info span { font-size: 12px; color: rgba(255,255,255,0.72); }
+
+/* ============================================================
+   Custom Tour Builder
+   ============================================================ */
+.custom-tour {
+  margin: 0 16px 24px; padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--glass); backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid var(--border); box-shadow: var(--shadow-card);
+}
+.custom-tour h3 { font-family: var(--font-serif); font-size: 17px; font-weight: 700; margin-bottom: 14px; letter-spacing: 0.5px; }
+.custom-tour .ct-row { display: flex; gap: 10px; margin-bottom: 12px; }
+.custom-tour input, .custom-tour select {
+  flex: 1; padding: 12px 16px; border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255,255,255,0.65); backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 14px; font-family: var(--font-sans); color: var(--text);
+  transition: all 0.2s;
+}
+.custom-tour input:focus, .custom-tour select:focus { outline: none; border-color: var(--ice-dark); box-shadow: 0 0 0 3px var(--ice-glass); }
+.custom-tour .ct-btn {
+  width: 100%; padding: 13px; border-radius: var(--radius); border: none;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer;
+  background: var(--ice-dark); color: #fff;
+  box-shadow: 0 4px 20px rgba(61,101,120,0.25);
+  transition: all 0.25s;
+}
+.custom-tour .ct-btn:active { transform: scale(0.98); background: #2a4a5a; }
+
+/* ============================================================
+   Food Cards — wide horizontal
+   ============================================================ */
+.food-card {
+  display: flex; gap: 14px; margin: 0 16px 12px; padding: 14px;
+  border-radius: var(--radius-lg);
+  background: var(--glass); backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid var(--border); box-shadow: var(--shadow-card);
+  cursor: pointer; transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.food-card:active { transform: scale(0.98); box-shadow: var(--shadow-float); }
+.food-card .fc-img {
+  width: 90px; height: 90px; border-radius: var(--radius); object-fit: cover; flex-shrink: 0;
+}
+.food-card .fc-detail { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.food-card .fc-detail h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.food-card .fc-detail p { font-size: 12px; color: var(--text-soft); line-height: 1.4; margin-bottom: 6px; }
+.food-card .fc-detail .fc-price { font-size: 17px; font-weight: 700; color: var(--red); }
+
+/* ============================================================
+   Highlight Banner Card
+   ============================================================ */
+.highlight-card {
+  margin: 0 16px 20px; border-radius: var(--radius-lg); padding: 18px 20px;
+  background: var(--glass); backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid var(--border); box-shadow: var(--shadow-card);
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.highlight-card:active { transform: scale(0.98); }
+.highlight-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.highlight-card p { font-size: 13px; color: var(--text-soft); line-height: 1.5; }
+.highlight-card .hc-tags { display: flex; gap: 8px; margin-top: 10px; }
+.highlight-card .hc-tags span { padding: 4px 12px; border-radius: 14px; font-size: 11px; font-weight: 600; background: var(--ice-glass); color: var(--ice-dark); }
+
+/* ============================================================
+   Bottom Nav — elliptical floating glass pill (5 tabs)
+   ============================================================ */
+.bottom-nav {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 24px); max-width: 440px; height: 62px; padding: 0 4px;
+  background: rgba(255,255,255,0.52);
+  backdrop-filter: blur(28px) saturate(220%); -webkit-backdrop-filter: blur(28px) saturate(220%);
+  border: 1px solid rgba(255,255,255,0.55); border-radius: 48px;
+  display: flex; align-items: center; justify-content: space-around; z-index: 200;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.5);
+  margin-bottom: var(--safe-bottom);
+}
+.bottom-nav::before {
+  content: ''; position: absolute; inset: -1px; border-radius: 48px; padding: 1px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.1) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+}
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  cursor: pointer; padding: 0; border: none; background: transparent;
+  color: var(--text-soft); font-size: 10px; font-weight: 600; letter-spacing: 0.3px;
+  transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative; width: 52px; height: 48px; border-radius: 28px; z-index: 1;
+}
+.nav-item.on { color: var(--ice-dark); }
+.nav-item .ni-icon { font-size: 20px; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.nav-item.on .ni-icon { transform: translateY(-4px) scale(1.12); }
+.nav-item.on .ni-dot {
+  position: absolute; top: 4px; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--ice-dark); opacity: 0.5;
+  box-shadow: 0 0 6px rgba(61,101,120,0.3);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+.nav-item:active { transform: scale(0.88); }
+.nav-slider {
+  position: absolute; top: 3px; height: 56px; border-radius: 32px;
+  background: var(--ice-glass); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(123,163,184,0.16); z-index: 0; pointer-events: none;
+  box-shadow: 0 2px 8px rgba(61,101,120,0.07), inset 0 1px 0 rgba(61,101,120,0.04);
+  transition: left 0.45s cubic-bezier(0.22, 1, 0.36, 1), width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: left, width;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 0.7;  transform: scale(1.6); }
+}
+
+/* ============================================================
+   Sheet Modal
+   ============================================================ */
+.sheet-mask {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.30); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  opacity: 0; pointer-events: none; transition: opacity 0.35s;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.sheet-mask.open { opacity: 1; pointer-events: auto; }
+.sheet {
+  width: 100%; max-width: 480px; max-height: 78%;
+  background: rgba(255,255,255,0.88); backdrop-filter: blur(32px) saturate(220%);
+  -webkit-backdrop-filter: blur(32px) saturate(220%);
+  border-radius: 32px 32px 0 0; overflow-y: auto;
+  padding: 24px 20px calc(24px + var(--safe-bottom));
+  transform: translateY(100%); transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sheet-mask.open .sheet { transform: translateY(0); }
+.sheet-handle { width: 38px; height: 5px; background: rgba(0,0,0,0.13); border-radius: 3px; margin: 0 auto 20px; }
+.sheet-img { width: 100%; aspect-ratio: 16/10; border-radius: var(--radius); object-fit: cover; margin-bottom: 18px; }
+.sheet h2 { font-family: var(--font-serif); font-size: 21px; font-weight: 700; margin-bottom: 8px; letter-spacing: 1px; }
+.sheet p { font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 16px; }
+.sheet .s-price { font-size: 26px; font-weight: 700; color: var(--red); margin-bottom: 18px; }
+.sheet .btn { width: 100%; padding: 15px; border-radius: var(--radius); border: none; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; transition: all 0.25s; }
+.sheet .btn.primary { background: var(--ice-dark); color: #fff; margin-bottom: 10px; box-shadow: 0 4px 20px rgba(61,101,120,0.25); }
+.sheet .btn.primary:active { background: #2a4a5a; transform: scale(0.98); }
+.sheet .btn.ghost { background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); color: var(--text); }
+.sheet .btn.ghost:active { transform: scale(0.98); }
+
+/* ============================================================
+   Toast
+   ============================================================ */
+.toast {
+  position: fixed; top: 70px; left: 50%;
+  transform: translateX(-50%) translateY(-24px);
+  background: rgba(26,26,26,0.82); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  color: #fff; padding: 11px 22px; border-radius: 24px;
+  font-size: 13px; font-weight: 600; z-index: 999;
+  opacity: 0; pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1); letter-spacing: 0.3px;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ============================================================
+   Animations
+   ============================================================ */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-rise { animation: riseIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-d1 { animation-delay: 0.04s; } .anim-d2 { animation-delay: 0.08s; } .anim-d3 { animation-delay: 0.12s; }
+.anim-d4 { animation-delay: 0.16s; } .anim-d5 { animation-delay: 0.20s; }
+
+@media (min-width: 481px) { .app { box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 20px 60px rgba(0,0,0,0.10); } }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ═══════════ Top Navigation ═══════════ -->
+  <header class="top-nav" id="topNav">
+    <div class="nav-brand">
+      <div class="brand-mark">❄️</div>
+      北国风光
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" title="消息">🔔</button>
+      <button class="nav-btn" title="搜索" onclick="tapSearch()">🔍</button>
+    </div>
+  </header>
+
+  <!-- ═══════════ Pages ═══════════ -->
+  <main class="page-area" id="pageArea">
+
+    <!-- ── 首页 HOME ── -->
+    <section class="page on" id="pg-home">
+      <div class="hero anim-rise">
+        <img class="hero-img" src="https://images.unsplash.com/photo-1483664852095-d6cc6870702d?w=800&q=80" alt="北国风光" loading="eager" onerror="this.style.display='none'">
+        <div class="hero-glass-layer hero-glass-1"></div>
+        <div class="hero-glass-layer hero-glass-2"></div>
+        <div class="hero-gradient"></div>
+        <div class="hero-body">
+          <span class="hero-chip">❄️ 北国好风光 · 尽在黑龙江</span>
+          <h1 class="hero-title">冰天雪地也是<br>金山银山</h1>
+          <p class="hero-sub">发现黑土地上的自然馈赠与文化瑰宝</p>
+        </div>
+      </div>
+
+      <!-- KPI -->
+      <div class="kpi-row anim-rise anim-d1">
+        <div class="kpi-tile"><div class="kpi-num">100+</div><div class="kpi-label">农特产品</div></div>
+        <div class="kpi-tile"><div class="kpi-num">20+</div><div class="kpi-label">精品线路</div></div>
+        <div class="kpi-tile"><div class="kpi-num">23人</div><div class="kpi-label">用户体验</div></div>
+      </div>
+
+      <!-- Search -->
+      <div class="search-glass anim-rise anim-d2" onclick="tapSearch()">
+        <span class="sg-icon">🔍</span>
+        <span class="sg-text">搜索查干湖冬捕、响水大米、朝鲜美食...</span>
+      </div>
+
+      <!-- 套餐推荐 -->
+      <div class="section-head"><h2>🎿 热门套餐推荐</h2><a class="more" onclick="goTab(1)">更多 →</a></div>
+      <div class="travel-strip" id="pkgHome"></div>
+
+      <!-- 文创产品 -->
+      <div class="section-head"><h2>🎨 文创好物精选</h2><a class="more" onclick="goTab(2)">市集 →</a></div>
+      <div class="product-grid" id="craftHome"></div>
+
+      <!-- 特色农产品 -->
+      <div class="section-head"><h2>🌾 黑土地馈赠</h2><a class="more" onclick="goTab(2)">市集 →</a></div>
+      <div class="product-grid" id="agriHome"></div>
+
+      <!-- 特色服务 -->
+      <div class="section-head"><h2>🎯 特色服务</h2></div>
+      <div class="feature-list">
+        <div class="feature-card anim-rise anim-d3" onclick="goTab(1)">
+          <div class="fc-icon ice">🧭</div>
+          <div class="fc-text"><h4>私人定制旅行</h4><p>输入目的地，AI生成专属北国行程方案</p></div>
+          <span class="fc-arrow">→</span>
+        </div>
+        <div class="feature-card anim-rise anim-d4" onclick="goTab(3)">
+          <div class="fc-icon red">🍜</div>
+          <div class="fc-text"><h4>牡丹江美食一日打卡</h4><p>朝鲜冷面 · 杀猪菜 · 冻梨打糕一站吃遍</p></div>
+          <span class="fc-arrow">→</span>
+        </div>
+        <div class="feature-card anim-rise anim-d5" onclick="goTab(2)">
+          <div class="fc-icon gold">🛍️</div>
+          <div class="fc-text"><h4>黑土市集</h4><p>宁安大米 · 东宁木耳 · 鱼皮挂件产地直发</p></div>
+          <span class="fc-arrow">→</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 旅游 TRAVEL ── -->
+    <section class="page" id="pg-travel">
+      <div class="hero anim-rise">
+        <img class="hero-img" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80" alt="查干湖冬捕" loading="lazy" onerror="this.style.display='none'">
+        <div class="hero-glass-layer hero-glass-1"></div>
+        <div class="hero-glass-layer hero-glass-2"></div>
+        <div class="hero-gradient"></div>
+        <div class="hero-body">
+          <span class="hero-chip">🐟 冰雪渔猎</span>
+          <h1 class="hero-title">走进查干湖<br>赴一场千年冬捕之约</h1>
+          <p class="hero-sub">20+条北国小众精品线路</p>
+        </div>
+      </div>
+
+      <!-- 标准化套餐 -->
+      <div class="section-head"><h2>📋 标准化套餐</h2></div>
+
+      <!-- 查干湖三天两晚 -->
+      <div class="highlight-card anim-rise" onclick="openDetail('t1','travel')" style="background:linear-gradient(135deg, rgba(255,255,255,0.65), rgba(220,235,245,0.55));">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="font-size:48px;flex-shrink:0;">🐟</div>
+          <div style="flex:1;">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+              <span style="font-size:10px;font-weight:700;color:#fff;background:var(--ice-dark);padding:3px 10px;border-radius:12px;">明星产品</span>
+              <span style="font-size:11px;color:var(--text-soft);">⭐ 4.9 (1,286评)</span>
+            </div>
+            <h3>🏔️ 前郭县域 · 查干湖三天两晚冰雪渔猎之旅</h3>
+            <p style="font-size:13px;color:var(--text-mid);line-height:1.6;">
+              亲历千年冬捕盛况 · 品尝全鱼宴 · 雪地温泉 · 蒙古包民宿 · 冰上骑马 · 非遗鱼皮画体验
+            </p>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600;background:var(--ice-glass);color:var(--ice-dark);">🐟 冬捕观摩</span>
+              <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600;background:var(--ice-glass);color:var(--ice-dark);">♨️ 雪地温泉</span>
+              <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600;background:var(--ice-glass);color:var(--ice-dark);">🏕️ 蒙古包</span>
+              <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600;background:var(--ice-glass);color:var(--ice-dark);">🎨 鱼皮画</span>
+            </div>
+            <div style="margin-top:10px;font-size:20px;font-weight:700;color:var(--ice-dark);">¥1,980 <small style="font-size:12px;font-weight:400;color:var(--text-soft);">/人起</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 更多标准化套餐 -->
+      <div class="travel-strip" id="travelStd"></div>
+
+      <!-- 小众景点 -->
+      <div class="section-head"><h2>💎 北方小众村落</h2></div>
+      <div class="travel-strip" id="travelHidden"></div>
+
+      <!-- 私人定制 -->
+      <div class="section-head"><h2>🧭 私人定制套餐</h2></div>
+      <div class="custom-tour anim-rise" id="customTourForm">
+        <h3>✏️ 输入目的地，AI为您定制专属北国之旅</h3>
+        <div class="ct-row">
+          <input type="text" id="ctDest" placeholder="想去哪儿？如：漠河北极村">
+        </div>
+        <div class="ct-row">
+          <select id="ctDays">
+            <option value="">选择天数</option>
+            <option>2天1晚</option>
+            <option>3天2晚</option>
+            <option>4天3晚</option>
+            <option>5天4晚</option>
+            <option>7天6晚</option>
+          </select>
+          <select id="ctStyle">
+            <option value="">旅行风格</option>
+            <option>冰雪体验</option>
+            <option>森林康养</option>
+            <option>民俗文化</option>
+            <option>美食之旅</option>
+            <option>摄影采风</option>
+          </select>
+        </div>
+        <button class="ct-btn" onclick="doCustomTour()">✨ 立即生成专属方案</button>
+      </div>
+    </section>
+
+    <!-- ── 市集 MARKET ── -->
+    <section class="page" id="pg-market">
+      <div class="hero anim-rise" style="background:linear-gradient(150deg,#5c8370,#4a7c59,#345840,#1e3828);">
+        <img class="hero-img" src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80" alt="黑土市集" loading="lazy" onerror="this.style.display='none'">
+        <div class="hero-glass-layer hero-glass-1"></div>
+        <div class="hero-glass-layer hero-glass-2"></div>
+        <div class="hero-gradient" style="background:linear-gradient(165deg,rgba(30,56,40,0.78),rgba(74,124,89,0.45),rgba(100,160,130,0.25));"></div>
+        <div class="hero-body">
+          <span class="hero-chip">🛒 产地直发</span>
+          <h1 class="hero-title">黑土市集<br>大自然的馈赠</h1>
+          <p class="hero-sub">从田间到餐桌 · 每一口都是北国的味道</p>
+        </div>
+      </div>
+
+      <div class="kpi-row anim-rise anim-d1">
+        <div class="kpi-tile"><div class="kpi-num" style="color:var(--green);">100+</div><div class="kpi-label">农特产品</div></div>
+        <div class="kpi-tile"><div class="kpi-num" style="color:var(--green);">98%</div><div class="kpi-label">好评率</div></div>
+        <div class="kpi-tile"><div class="kpi-num" style="color:var(--green);">48h</div><div class="kpi-label">产地直发</div></div>
+      </div>
+
+      <div class="section-head"><h2>🌾 特色农产品</h2></div>
+      <div class="product-grid" id="agriMarket"></div>
+
+      <div class="section-head"><h2>🎨 非遗文创</h2></div>
+      <div class="product-grid" id="craftMarket"></div>
+    </section>
+
+    <!-- ── 美食 FOOD ── -->
+    <section class="page" id="pg-food">
+      <div class="hero anim-rise" style="background:linear-gradient(150deg,#843a3a,#b8453a,#8a3030,#5a2020);">
+        <img class="hero-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80" alt="东北美食" loading="lazy" onerror="this.style.display='none'">
+        <div class="hero-glass-layer hero-glass-1"></div>
+        <div class="hero-glass-layer hero-glass-2"></div>
+        <div class="hero-gradient" style="background:linear-gradient(165deg,rgba(90,32,32,0.8),rgba(184,69,58,0.45),rgba(200,120,100,0.25));"></div>
+        <div class="hero-body">
+          <span class="hero-chip">🍜 舌尖上的北国</span>
+          <h1 class="hero-title">大快朵颐<br>地道东北味</h1>
+          <p class="hero-sub">朝鲜族冷面 · 杀猪菜 · 冻梨打糕一站吃遍</p>
+        </div>
+      </div>
+
+      <!-- 牡丹江一日打卡 -->
+      <div class="highlight-card anim-rise" style="background:linear-gradient(135deg, rgba(255,245,240,0.7), rgba(255,235,225,0.55));">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="font-size:48px;flex-shrink:0;">🗺️</div>
+          <div style="flex:1;">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+              <span style="font-size:10px;font-weight:700;color:#fff;background:var(--red);padding:3px 10px;border-radius:12px;">热门路线</span>
+              <span style="font-size:11px;color:var(--text-soft);">⭐ 4.8 (856评)</span>
+            </div>
+            <h3>🍜 牡丹江美食一日打卡之旅</h3>
+            <p style="font-size:13px;color:var(--text-mid);line-height:1.6;">
+              朝鲜族冷面老店 → 镜泊湖鱼宴 → 打糕手作坊 → 冻梨甜品 → 东北杀猪菜晚宴
+            </p>
+            <div class="hc-tags">
+              <span>🍜 冷面</span><span>🐟 鱼宴</span><span>🍚 打糕</span><span>🍐 冻梨</span><span>🥘 杀猪菜</span>
+            </div>
+            <div style="margin-top:10px;font-size:20px;font-weight:700;color:var(--red);">¥298 <small style="font-size:12px;font-weight:400;color:var(--text-soft);">/人起</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>🍲 地道东北味</h2></div>
+      <div id="foodList1"></div>
+
+      <div class="section-head"><h2>🎁 便携小吃 & 伴手礼</h2></div>
+      <div id="foodList2"></div>
+    </section>
+
+    <!-- ── 个人中心 PROFILE ── -->
+    <section class="page" id="pg-profile">
+      <div class="profile-hero anim-rise">
+        <div class="ph-overlay"></div>
+        <div class="ph-body">
+          <div class="ph-avatar">🧑‍🌾</div>
+          <div class="ph-info">
+            <h3>北国旅行者</h3>
+            <span>ID: BGFG20240603 · 已打卡 18 个村落</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-row anim-rise anim-d1">
+        <div class="kpi-tile"><div class="kpi-num">6</div><div class="kpi-label">待发货</div></div>
+        <div class="kpi-tile"><div class="kpi-num">2</div><div class="kpi-label">待出行</div></div>
+        <div class="kpi-tile"><div class="kpi-num">42</div><div class="kpi-label">收藏</div></div>
+      </div>
+
+      <div class="feature-list">
+        <div class="feature-card"><div class="fc-icon ice">📦</div><div class="fc-text"><h4>我的订单</h4><p>市集订单 · 旅行订单 · 美食订单</p></div><span class="fc-arrow">→</span></div>
+        <div class="feature-card"><div class="fc-icon red">❤️</div><div class="fc-text"><h4>我的收藏</h4><p>商品 · 线路 · 美食</p></div><span class="fc-arrow">→</span></div>
+        <div class="feature-card"><div class="fc-icon gold">🧭</div><div class="fc-text"><h4>我的定制行程</h4><p>已生成的AI私人定制方案</p></div><span class="fc-arrow">→</span></div>
+        <div class="feature-card"><div class="fc-icon ice">📍</div><div class="fc-text"><h4>收货地址</h4><p>管理您的配送地址</p></div><span class="fc-arrow">→</span></div>
+        <div class="feature-card"><div class="fc-icon green">💬</div><div class="fc-text"><h4>客服中心</h4><p>在线客服 · 常见问题</p></div><span class="fc-arrow">→</span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════ Bottom Navigation (5 Tabs) ═══════════ -->
+  <nav class="bottom-nav" id="bottomNav">
+    <span class="nav-slider" id="navSlider"></span>
+    <button class="nav-item on" data-idx="0"><span class="ni-icon">🏠</span><span>首页</span></button>
+    <button class="nav-item"      data-idx="1"><span class="ni-icon">✈️</span><span>旅游</span></button>
+    <button class="nav-item"      data-idx="2"><span class="ni-icon">🛒</span><span>市集</span></button>
+    <button class="nav-item"      data-idx="3"><span class="ni-icon">🍜</span><span>美食</span></button>
+    <button class="nav-item"      data-idx="4"><span class="ni-icon">👤</span><span>我的</span></button>
+  </nav>
+
+  <!-- ═══════════ Sheet Modal ═══════════ -->
+  <div class="sheet-mask" id="sheetMask" onclick="closeSheet(event)">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <img class="sheet-img" id="sheetImg" src="" alt="">
+      <h2 id="sheetTitle"></h2>
+      <p id="sheetDesc"></p>
+      <div class="s-price" id="sheetPrice"></div>
+      <button class="btn primary" onclick="doBuy()">立即购买 / 预订</button>
+      <button class="btn ghost" onclick="closeSheet()">加入收藏 ❤️</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ Toast ═══════════ -->
+  <div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+
+// —— 农特产品 ——
+const AGRI_PRODUCTS = [
+  { id:'a1',cat:'rice',name:'宁安响水大米 · 火山岩板田',sub:'镜泊湖畔 · 有机种植',price:'89',unit:'/5kg',badge:'地理标志',detail:'产自宁安市渤海镇响水村，万年火山熔岩台地上种植。镜泊湖水灌溉，米粒晶莹如玉，蒸煮后油亮溢香，口感绵软筋道。历代贡米品质。' },
+  { id:'a2',cat:'fungus',name:'海林猴头菇 · 山珍之王',sub:'林海雪原 · 野生环境培育',price:'128',unit:'/500g',badge:'有机认证',detail:'海林地处长白山余脉，森林覆盖率超85%。猴头菇形似猴头，肉质肥厚鲜嫩，营养丰富，与熊掌、海参、鱼翅并称"四大名菜"。' },
+  { id:'a3',cat:'fungus',name:'东宁黑木耳 · 天下第一耳',sub:'中国黑木耳之乡',price:'68',unit:'/250g',badge:'国家地标',detail:'东宁市是中国黑木耳之乡，全国最大生产基地。朵大肉厚、色泽黑亮、口感脆嫩，泡发率高，凉拌炒食炖汤皆宜。' },
+  { id:'a4',cat:'honey',name:'饶河椴树蜜 · 东北黑蜂',sub:'国家级自然保护区',price:'118',unit:'/500g',badge:'有机蜂蜜',detail:'饶河东北黑蜂国家级自然保护区，椴树花期仅15天。蜜色晶莹如琥珀，花香清雅，结晶细腻如脂，营养丰富。' },
+];
+
+// —— 文创产品 ——
+const CRAFT_PRODUCTS = [
+  { id:'c1',cat:'embroidery',name:'渤海靺鞨绣挂画 · 镜泊飞瀑',sub:'国家级非遗 · 纯手工刺绣',price:'1,280',unit:'',badge:'非遗传承',detail:'靺鞨绣源自唐代渤海国，是黑龙江省国家级非遗项目。以冰雪为主题，针法细密层叠，立体感极强。本幅《镜泊飞瀑》由省级传承人监制，装裱精良。' },
+  { id:'c2',cat:'fishskin',name:'赫哲族鱼皮挂件 · 吉祥双鱼',sub:'联合国非遗 · 纯手工制作',price:'168',unit:'',badge:'世界级非遗',detail:'赫哲族鱼皮制作技艺入选联合国教科文组织非遗名录。选用大马哈鱼皮，经剥皮、晾干、鞣制、染色等30余道工序纯手工制成。每件独一无二。' },
+  { id:'c3',cat:'paper',name:'方正剪纸 · 北国雪乡',sub:'国家级非遗 · 手工精剪',price:'268',unit:'',badge:'非遗传承',detail:'方正剪纸是黑龙江最具代表性的民间艺术之一。本作品以"北国雪乡"为主题，红纸精剪，构图饱满，线条流畅，装裱精美。' },
+];
+
+// —— 旅游套餐 ——
+const TRAVEL_PKGS = [
+  { id:'t1',type:'standard',title:'查干湖三天两晚冰雪渔猎之旅',duration:'3天2晚',tag:'明星产品',price:'1,980',region:'前郭县',stars:'4.9',reviews:'1,286',detail:'Day1: 抵达查干湖→冬捕现场观摩千年渔猎→全鱼宴→入住蒙古包。Day2: 冰上骑马→雪地温泉→鱼皮画非遗手作→篝火晚会。Day3: 冰钓体验→农家杀猪菜→返程。全程在地管家陪同。' },
+  { id:'t2',type:'standard',title:'漠河北极村三天两晚极光之旅',duration:'3天2晚',tag:'热门',price:'2,380',region:'漠河市',stars:'4.8',reviews:'968',detail:'中国最北端——北极村。体验极昼/极夜奇观，打卡最北邮局、最北哨所，住鄂伦春族撮罗子民宿，品尝驯鹿肉和蓝莓酒。每年6-7月有机会邂逅北极光。' },
+  { id:'t3',type:'standard',title:'五大连池两日火山康养之旅',duration:'2天1晚',tag:'康养',price:'1,280',region:'五大连池市',stars:'4.7',reviews:'756',detail:'探访世界地质公园五大连池火山群。品天然冷矿泉水、泡火山矿泥浴、徒步老黑山火山口、游药泉湖。全程康养理疗体验。' },
+  { id:'t4',type:'hidden',title:'呼玛县 · 中俄界江秘境',duration:'3天2晚',tag:'小众',price:'1,680',region:'呼玛县',stars:'4.9',reviews:'186',detail:'大兴安岭深处的边境小城，黑龙江畔的隐秘角落。探访鄂伦春族猎民村、品尝江鱼宴、界江游船、原始森林徒步。真正的人少景美。' },
+  { id:'t5',type:'hidden',title:'雪乡 · 双峰林场童话世界',duration:'2天1晚',tag:'网红',price:'880',region:'海林市',stars:'4.8',reviews:'2,356',detail:'中国雪乡——积雪期长达7个月，雪质粘厚，形成独特的雪蘑菇景观。夜晚红灯笼映雪，宛如童话世界。含雪乡民宿+篝火晚会+雪地摩托。' },
+  { id:'t6',type:'hidden',title:'伊春汤旺河 · 林海雪原穿越',duration:'4天3晚',tag:'探险',price:'2,980',region:'伊春市',stars:'4.9',reviews:'328',detail:'小兴安岭腹地，亚洲最大红松原始林。雪地徒步穿越、林间木屋住宿、松子采摘体验、鄂伦春猎人向导带队。真正的荒野探险。' },
+];
+
+// —— 美食 ——
+const FOOD_SAVORY = [
+  { id:'f1',cat:'savory',name:'朝鲜族冷面 · 延边风味',sub:'Q弹爽滑 · 冰爽酸甜',price:'28',unit:'/碗',desc:'正宗延边朝鲜族冷面，荞麦面配冰镇牛肉高汤，酸甜爽口，配以泡菜、黄瓜丝、鸡蛋、牛肉片。夏日消暑必吃。' },
+  { id:'f2',cat:'savory',name:'东北杀猪菜 · 年味大餐',sub:'血肠 · 酸菜 · 白肉一锅出',price:'68',unit:'/份',desc:'东北最具代表性的传统菜肴。新鲜猪血灌肠、自家腌制的酸菜、五花白肉一锅炖煮，蘸蒜泥酱油，大口吃肉大碗喝酒。' },
+  { id:'f3',cat:'savory',name:'得莫利炖鱼 · 松花江鲜',sub:'活鱼现炖 · 粉条豆腐',price:'88',unit:'/份',desc:'哈尔滨得莫利镇百年名菜。松花江活鲤鱼现杀现炖，配以粉条、豆腐、白菜，汤汁浓郁，鱼肉鲜嫩。' },
+  { id:'f4',cat:'savory',name:'锅包肉 · 哈尔滨名菜',sub:'外酥里嫩 · 酸甜可口',price:'48',unit:'/份',desc:'哈尔滨道台府百年传承名菜。猪里脊肉挂糊油炸至金黄，浇上糖醋汁，外酥里嫩，酸甜适口。' },
+];
+
+const FOOD_SNACKS = [
+  { id:'f5',cat:'snack',name:'朝鲜族打糕 · 手工捶打',sub:'糯米捶制 · Q弹不粘牙',price:'35',unit:'/盒',desc:'延边朝鲜族传统小吃。精选糯米蒸熟后木槌反复捶打，裹以红豆粉或黄豆粉，Q弹有嚼劲，甜而不腻。礼盒装适合伴手礼。' },
+  { id:'f6',cat:'snack',name:'冻梨礼盒 · 东北冬天的味道',sub:'自然冰冻 · 甜美多汁',price:'58',unit:'/6枚装',desc:'选用优质秋子梨，利用东北冬季自然低温反复冻融，果肉软化呈深褐色。吃前用冷水"缓"一下，咬开一吸，满口梨汁。' },
+  { id:'f7',cat:'snack',name:'大列巴 · 哈尔滨俄式面包',sub:'俄式传统 · 麦香浓郁',price:'45',unit:'/个',desc:'哈尔滨百年俄式传统面包。啤酒花发酵，椴木炭烤，外皮焦脆，内里松软。配红肠和格瓦斯是正宗哈尔滨吃法。' },
+  { id:'f8',cat:'snack',name:'松子仁礼盒 · 小兴安岭野生',sub:'百年红松 · 粒粒饱满',price:'98',unit:'/250g',desc:'小兴安岭野生红松子，非油炸，低温烘焙保留原香。颗粒饱满，松香浓郁，零食佐茶皆宜。精美礼盒装。' },
+];
+
+// ═══════════════════════════════════════
+// RENDER HELPERS
+// ═══════════════════════════════════════
+const PROD_IMG = {
+  a1: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&q=80',           // 响水大米 — 蒸熟的米饭
+  a2: 'https://images.unsplash.com/photo-1504545102780-26774c1bb73b?w=400&q=80',           // 猴头菇 — 蘑菇特写
+  a3: 'https://images.unsplash.com/photo-1567449303078-57ad995bd17a?w=400&q=80',           // 东宁黑木耳 — 干货菌类
+  a4: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&q=80',           // 椴树蜜 — 蜂蜜罐
+  c1: 'https://images.unsplash.com/photo-1603252109309-229c7b9b0c1e?w=400&q=80',           // 靺鞨绣 — 手工刺绣特写
+  c2: 'https://images.unsplash.com/photo-1601924638867-3a6de6b7a500?w=400&q=80',           // 鱼皮挂件 — 手工皮艺
+  c3: 'https://images.unsplash.com/photo-1611651338412-84094fa51294?w=400&q=80',           // 方正剪纸 — 红色纸艺
+};
+
+function prodCard(p) {
+  const src = PROD_IMG[p.id] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80';
+  return `<div class="product-card" onclick="openDetail('${p.id}','${p.cat==='embroidery'||p.cat==='fishskin'||p.cat==='paper'?'craft':'agri'}')">
+    <div class="img-wrap">
+      <img src="${src}" alt="${p.name}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80';">
+      <span class="badge-glass">${p.badge}</span>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${p.name}</div>
+      <div class="card-sub">${p.sub}</div>
+      <div class="card-foot">
+        <span class="price">¥${p.price}<small>${p.unit}</small></span>
+        <span class="stars">立即购买 →</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+const TRAVEL_IMG = {
+  t1: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80',  // 查干湖冬捕 — 冰湖+渔网
+  t2: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80',  // 漠河北极村 — 北极光
+  t3: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600&q=80',  // 五大连池 — 火山景观
+  t4: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=600&q=80',  // 呼玛界江 — 河流森林
+  t5: 'https://images.unsplash.com/photo-1544829881-f51ef39b7443?w=600&q=80',      // 雪乡 — 雪地红灯笼
+  t6: 'https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?w=600&q=80',   // 伊春林海雪原 — 雪松森林
+};
+
+function travelCard(t) {
+  const img = TRAVEL_IMG[t.id]
+    || `https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=600&q=80`;
+  return `<div class="travel-card" onclick="openDetail('${t.id}','travel')">
+    <div class="t-img-wrap">
+      <img src="${img}" alt="${t.title}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=600&q=80';">
+      <span class="t-tag">${t.tag}</span>
+      <button class="t-heart" onclick="event.stopPropagation();toggleHeart(this)">🤍</button>
+    </div>
+    <div class="t-body">
+      <div class="t-title">${t.title}</div>
+      <div class="t-meta"><span>📍 ${t.region||''}</span><span>🕐 ${t.duration}</span><span>⭐ ${t.stars} (${t.reviews}评)</span></div>
+      <div class="t-foot">
+        <span class="t-price">¥${t.price}<small>/人起</small></span>
+        <span class="t-rating">查看详情 →</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+const FOOD_IMG = {
+  f1: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=200&q=80',  // 朝鲜冷面
+  f2: 'https://images.unsplash.com/photo-1529692236675-f8f6cd519a3e?w=200&q=80',  // 杀猪菜 — 炖肉锅
+  f3: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=200&q=80',     // 得莫利炖鱼
+  f4: 'https://images.unsplash.com/photo-1580651315530-69c8e0026377?w=200&q=80',  // 锅包肉
+  f5: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=200&q=80',     // 朝鲜打糕 — 日韩糕点
+  f6: 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=200&q=80',  // 冻梨 — 新鲜梨子特写
+  f7: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&q=80',  // 大列巴 — 手工面包
+  f8: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=200&q=80',  // 松子仁 — 坚果干货
+};
+
+function foodCard(f) {
+  const src = FOOD_IMG[f.id] || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&q=80';
+  return `<div class="food-card" onclick="openDetail('${f.id}','food')">
+    <img class="fc-img" src="${src}" alt="${f.name}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&q=80';">
+    <div class="fc-detail">
+      <h4>${f.name}</h4>
+      <p>${f.sub}</p>
+      <p style="font-size:12px;color:var(--text-soft);">${f.desc}</p>
+      <span class="fc-price">¥${f.price}<small style="font-size:11px;font-weight:400;color:var(--text-soft);">${f.unit}</small></span>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════
+function renderAll() {
+  // 首页：套餐推荐
+  const pkgHome = document.getElementById('pkgHome');
+  if(pkgHome) pkgHome.innerHTML = TRAVEL_PKGS.slice(0,3).map(travelCard).join('');
+
+  // 首页：文创好物
+  const craftHome = document.getElementById('craftHome');
+  if(craftHome) craftHome.innerHTML = CRAFT_PRODUCTS.slice(0,2).map(prodCard).join('');
+
+  // 首页：特色农产品
+  const agriHomeEl = document.getElementById('agriHome');
+  if(agriHomeEl) agriHomeEl.innerHTML = AGRI_PRODUCTS.slice(0,2).map(prodCard).join('');
+
+  // 旅游页：标准套餐
+  const travelStd = document.getElementById('travelStd');
+  if(travelStd) travelStd.innerHTML = TRAVEL_PKGS.filter(t=>t.type==='standard').map(travelCard).join('');
+
+  // 旅游页：小众村落
+  const travelHidden = document.getElementById('travelHidden');
+  if(travelHidden) travelHidden.innerHTML = TRAVEL_PKGS.filter(t=>t.type==='hidden').map(travelCard).join('');
+
+  // 市集：农产品
+  const agriMarket = document.getElementById('agriMarket');
+  if(agriMarket) agriMarket.innerHTML = AGRI_PRODUCTS.map(prodCard).join('');
+
+  // 市集：文创
+  const craftMarket = document.getElementById('craftMarket');
+  if(craftMarket) craftMarket.innerHTML = CRAFT_PRODUCTS.map(prodCard).join('');
+
+  // 美食：地道东北味
+  const food1 = document.getElementById('foodList1');
+  if(food1) food1.innerHTML = FOOD_SAVORY.map(foodCard).join('');
+
+  // 美食：便携小吃
+  const food2 = document.getElementById('foodList2');
+  if(food2) food2.innerHTML = FOOD_SNACKS.map(foodCard).join('');
+}
+
+// ═══════════════════════════════════════
+// TAB SWITCHING (5 tabs)
+// ═══════════════════════════════════════
+const PAGE_IDS = ['pg-home','pg-travel','pg-market','pg-food','pg-profile'];
+
+function updateNavSlider(idx) {
+  const nav = document.getElementById('bottomNav');
+  const slider = document.getElementById('navSlider');
+  const items = nav.querySelectorAll('.nav-item');
+  const target = items[idx];
+  if(!target) return;
+  const navRect = nav.getBoundingClientRect();
+  const itemRect = target.getBoundingClientRect();
+  slider.style.left = (itemRect.left - navRect.left) + 'px';
+  slider.style.width = itemRect.width + 'px';
+}
+
+function goTab(idx) {
+  document.querySelectorAll('.nav-item').forEach((el,i) => {
+    const wasOn = el.classList.contains('on');
+    el.classList.toggle('on', i===idx);
+    if(i===idx && !wasOn) {
+      const dot = el.querySelector('.ni-dot');
+      if(!dot) { const d = document.createElement('span'); d.className='ni-dot'; el.appendChild(d); }
+    } else if(i!==idx) {
+      const dot = el.querySelector('.ni-dot');
+      if(dot) dot.remove();
+    }
+  });
+  document.querySelectorAll('.page').forEach((p,i) => p.classList.toggle('on', i===idx));
+  const pg = document.getElementById(PAGE_IDS[idx]);
+  if(pg) pg.scrollTop = 0;
+  updateNavSlider(idx);
+}
+
+document.getElementById('bottomNav').addEventListener('click', e => {
+  const btn = e.target.closest('.nav-item');
+  if(!btn) return;
+  goTab(parseInt(btn.dataset.idx));
+});
+
+// ═══════════════════════════════════════
+// SHEET MODAL
+// ═══════════════════════════════════════
+let sheetData = null;
+
+function openDetail(id, type) {
+  let allLists;
+  if(type==='agri') allLists = AGRI_PRODUCTS;
+  else if(type==='craft') allLists = CRAFT_PRODUCTS;
+  else if(type==='travel') allLists = TRAVEL_PKGS;
+  else if(type==='food') allLists = [...FOOD_SAVORY, ...FOOD_SNACKS];
+  else return;
+
+  const item = allLists.find(x => x.id===id);
+  if(!item) return;
+  sheetData = { item, type };
+
+  document.getElementById('sheetImg').style.display = 'none'; // No image for sheet in simple mode
+  document.getElementById('sheetTitle').textContent = item.name || item.title;
+  document.getElementById('sheetDesc').textContent = item.detail || item.desc || '';
+  const priceEl = document.getElementById('sheetPrice');
+  const unit = item.unit || '';
+  const dur = item.duration || '';
+  if(type==='travel') {
+    priceEl.innerHTML = `¥${item.price}<small style="font-size:14px;font-weight:400;color:var(--text-soft);">/人起 · ${dur}</small>`;
+  } else if(type==='food') {
+    priceEl.innerHTML = `¥${item.price}<small style="font-size:14px;font-weight:400;color:var(--text-soft);">${unit}</small>`;
+  } else {
+    priceEl.innerHTML = `¥${item.price}<small style="font-size:14px;font-weight:400;color:var(--text-soft);">${unit}</small>`;
+  }
+  document.getElementById('sheetMask').classList.add('open');
+}
+
+function closeSheet(e) {
+  if(e && e.target !== document.getElementById('sheetMask')) return;
+  document.getElementById('sheetMask').classList.remove('open');
+}
+
+function doBuy() {
+  const label = sheetData?.type==='travel' ? '旅行套餐' : sheetData?.type==='food' ? '美食' : '商品';
+  toast(`✅ ${label}已加入订单，请前往结算`);
+  closeSheet();
+}
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ═══════════════════════════════════════
+// HEART / SEARCH / CUSTOM TOUR
+// ═══════════════════════════════════════
+function toggleHeart(btn) {
+  btn.classList.toggle('liked');
+  btn.textContent = btn.classList.contains('liked') ? '❤️' : '🤍';
+  toast(btn.classList.contains('liked') ? '💚 已加入收藏' : '已取消收藏');
+}
+
+function tapSearch() { toast('🔍 搜索功能开发中，敬请期待'); }
+
+function doCustomTour() {
+  const dest = document.getElementById('ctDest').value.trim();
+  const days = document.getElementById('ctDays').value;
+  const style = document.getElementById('ctStyle').value;
+  if(!dest) { toast('📍 请输入目的地'); return; }
+  if(!days) { toast('📅 请选择出行天数'); return; }
+  toast(`✨ 正在为您生成「${dest}」${days}${style?' · '+style:''}专属方案...`);
+  // Simulate
+  setTimeout(() => toast('✅ 专属方案已生成，请前往"我的定制行程"查看！'), 1500);
+}
+
+// ═══════════════════════════════════════
+// SCROLL → NAV BLUR
+// ═══════════════════════════════════════
+const topNav = document.getElementById('topNav');
+document.querySelectorAll('.page').forEach(pg => {
+  pg.addEventListener('scroll', () => {
+    topNav.classList.toggle('scrolled', pg.scrollTop > 10);
+  }, { passive: true });
+});
+
+// ═══════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if(e.key>='1' && e.key<='5') goTab(parseInt(e.key)-1);
+  if(e.key==='Escape') closeSheet();
+});
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+renderAll();
+updateNavSlider(0);
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const active = document.querySelector('.nav-item.on');
+    if(active) updateNavSlider(parseInt(active.dataset.idx));
+  }, 100);
+});
+
+console.log('%c❄️ 北国风光 APP %c已就绪', 'font-size:18px;','');
+console.log('   ⌨️ 快捷键: 1=首页 2=旅游 3=市集 4=美食 5=我的 ESC=关闭弹窗');
+</script>
+</body>
+</html>
